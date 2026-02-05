@@ -1,0 +1,69 @@
+name: CI CD Pipeline Integration
+
+on:
+  push:
+    branches: [ "main" ]
+  
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      CI: "true"
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+
+    steps:
+      - name: Check repository
+        uses: actions/checkout@v4
+
+      - name: python setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install fastapi sqlalchemy psycopg2-binary python-dotenv uvicorn
+
+      - name: Verify FastAPI app
+        run: |
+          ls : -l
+          python --version
+          test -f main.py
+          echo"main.py exists"
+
+      - name: Debug docker username
+        run: |
+          echo "Docker user is: '${{ secrets.DOCKER_USERNAME }}'"
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+     
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/project_backend:latest .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Docker image
+        run: |
+           docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
+
+      - name: Deploy application
+        run: |
+           docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
+           docker stop backend || true
+           docker run -d -p 8000:8000 --restart unless-stopped --name project_backend khushinikam/backend:latest
+        
+      - name: Show app URL
+        run: echo "App is live at http://localhost:8000"
