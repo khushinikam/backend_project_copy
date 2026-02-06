@@ -4,22 +4,22 @@ services:
   db:
     build:
       context: .
-      Dockerfile: Dockerfile.db
+      dockerfile: Dockerfile.db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: auth_db
     ports:
-      - "5432:5432"
+    - "5432:5432"
 
   backend:
     build:
       context: .
-      Dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile.backend
     env_file:
       - .env
     depends_on:
       - db
     ports:
-      - "8000:8000"
+    - "8000:8000"
     
