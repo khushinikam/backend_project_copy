@@ -45,18 +45,21 @@ jobs:
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
-     
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest .
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/database:latest .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+     
+      - name: Build backend image
+        run: |
+          docker build -f Dockerfile.backend -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest .
+        
+      - name: Build database image
+        run: |
+          docker build -f Dockerfile.database -t ${{ secrets.DOCKERHUB_USERNAME }}/database:latest .
+          
       - name: Push Docker image
         run: |
            docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
@@ -66,10 +69,11 @@ jobs:
         run: |
            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/database:latest
-           docker stop backend || true
-           docker stop database || true
-           docker run -d -p 8000:8000 khushinikam/backend:latest
-           docker run -d -p 5432:5432 khushinikam/database:latest
+           docker compose up -d
+      #      docker stop backend || true
+      #      docker stop database || true
+      #      docker run -d -p 8000:8000 khushinikam/backend:latest
+      #      docker run -d -p 5432:5432 khushinikam/database:latest
         
-      - name: Show app URL
-        run: echo "App is live at http://localhost:8000"
+      # - name: Show app URL
+      #   run: echo "App is live at http://localhost:8000"
