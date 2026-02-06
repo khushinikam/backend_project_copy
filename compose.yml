@@ -8,7 +8,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: auth_ab
-
+     ports:
+        - "5432:5432"
 
 
     backend: 
