@@ -7,7 +7,7 @@ load_dotenv()
 
 
 
-print ("step 1")
+
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
