@@ -36,8 +36,6 @@ jobs:
         run: |
           ls -l
           python --version
-          test -f main.py
-          echo "main.py exists"
 
       - name: Debug docker username
         run: |
@@ -60,9 +58,12 @@ jobs:
         run: |
           docker build -f Dockerfile.db -t ${{ secrets.DOCKERHUB_USERNAME }}/database:latest .
           
-      - name: Push Docker image
+      - name: Push Docker_backend image
         run: |
            docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
+
+      - name: Push Docker_database image
+        run: |
            docker push ${{ secrets.DOCKERHUB_USERNAME }}/database:latest
 
       - name: Deploy application
@@ -73,7 +74,7 @@ jobs:
 
       - name: Run docker application
         run: |
-          docker compose up --build
+          docker compose up -d --build
     
  
         
