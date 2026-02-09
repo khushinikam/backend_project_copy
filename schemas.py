@@ -14,6 +14,9 @@ class userResponse(BaseModel):
     email:str
     password : str
 
+class userUpdate(BaseModel):
+    username: str
+    email: str
 
 class token(BaseModel):
     access_token : str

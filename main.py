@@ -15,3 +15,4 @@ app.include_router(router)
 @app.get("/")
 async def home():
     return {"status":" routes working fine"}
+
