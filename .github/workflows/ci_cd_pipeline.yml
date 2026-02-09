@@ -69,7 +69,11 @@ jobs:
         run: |
            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/database:latest
-           docker compose up -d
+           
+
+      - name: Run docker application
+        run: |
+          docker compose up --build
     
  
         
