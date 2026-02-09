@@ -31,10 +31,7 @@ def signup(user: schemas.userCreate, db: Session = Depends(get_db)):
 def login(user: schemas.userLogin, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
 
-    if not db_user or not authentication.verify_password(user.password, db_user.password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    token = authentication.create_access_token({"subject": db_user.email})
+    token = authentication.access_token({"subject": db_user.email})
     return {"access_token": token, "token_type": "bearer"}
 
 # update username, email of a user by its respective id
