@@ -31,3 +31,15 @@ def login(user: schemas.userLogin, db: Session = Depends(get_db)):
 
     token = authentication.create_access_token({"subject": db_user.email})
     return {"access_token": token, "token_type": "bearer"}
+
+@router.delete("/delete/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    db.delete(db_user)
+    db.commit()
+
+    return {"message": "User deleted successfully"}
