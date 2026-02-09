@@ -34,7 +34,6 @@ jobs:
 
       - name: Verify FastAPI app
         run: |
-          ls -l
           python --version
 
       - name: Debug docker username

@@ -5,11 +5,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
-
-
-
-
 DATABASE_URL = os.getenv("DATABASE_URL")
 print(DATABASE_URL)
 
@@ -27,7 +22,7 @@ except Exception as e:
 sessionLocal = sessionmaker(
     bind = engine
 )
-print("Database step 3")
+
 BaseClass = declarative_base()
 
 def get_db():
