@@ -18,7 +18,8 @@ def get_users(db: Session = Depends(get_db)):
 def signup(user: schemas.userCreate, db: Session = Depends(get_db)):
     
     new_user = models.User(
-        username=user.username, email=user.email, password=authentication.hash_password(user.password)
+        username=user.username, email=user.email, password=authentication.hash_password(user.password),
+        phoneNumber = user.phoneNumber
     )
     db.add(new_user)
     db.commit()
@@ -47,6 +48,7 @@ def update_user(
     else:
         db_user.username = user.username
         db_user.email = user.email
+        db_user.phoneNumber= user.phoneNumber
 
         db.commit()
         db.refresh(db_user)
