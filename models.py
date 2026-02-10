@@ -8,3 +8,4 @@ class User(BaseClass):
     username = Column(String, unique=True,nullable=False)
     email = Column(String, unique=True,nullable=False)
     password = Column(String)
+    phoneNumber = Column(String, unique = True, nullable= False)
